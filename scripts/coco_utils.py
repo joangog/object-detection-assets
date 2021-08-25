@@ -11,7 +11,7 @@ import torchvision
 from pycocotools import mask as coco_mask
 from pycocotools.coco import COCO
 
-import assets.transforms as T
+import scripts.transforms as T
 
 
 class FilterAndRemapCocoCategories(object):
