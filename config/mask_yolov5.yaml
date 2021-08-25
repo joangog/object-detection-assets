@@ -1,0 +1,7 @@
+path: /contents/dataset
+train: train_images
+val: val_images
+test:  test_images
+
+nc: 2  # Number of classes
+names: ['mask', 'no mask']  # class names
