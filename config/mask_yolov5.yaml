@@ -1,4 +1,4 @@
-path: /contents/dataset
+path: /content/dataset
 train: images/train_images
 val: images/val_images
 test:  images/test_images
