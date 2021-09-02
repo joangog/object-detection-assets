@@ -4,4 +4,4 @@ val: images/val_images
 test:  images/test_images
 
 nc: 3  # Number of classes
-names: ['BG', 'mask', 'no mask']  # class names
+names: ['BG', 'mask', 'no_mask']  # class names
