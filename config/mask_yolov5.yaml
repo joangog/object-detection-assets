@@ -3,5 +3,5 @@ train: images/train_images
 val: images/val_images
 test:  images/test_images
 
-nc: 3  # Number of classes
-names: ['BG', 'mask', 'no_mask']  # class names
+nc: 2  # Number of classes
+names: ['mask', 'no_mask']  # class names
