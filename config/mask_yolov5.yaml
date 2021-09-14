@@ -1,7 +1,7 @@
-path: /contents/dataset
-train: train_images
-val: val_images
-test:  test_images
+path: /content/dataset
+train: images/train_images
+val: images/val_images
+test:  images/test_images
 
 nc: 2  # Number of classes
-names: ['mask', 'no mask']  # class names
+names: ['mask', 'no_mask']  # class names

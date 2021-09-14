@@ -1,14 +1,25 @@
 # Copied and adjusted from repo pytorch/vision/references/detection/engine.py
 
-import math
 import sys
+import math
 import time
-import torch
 
+import torch
 import torchvision.models.detection as M
-import scripts.coco_utils as SCU
+import torchvision.transforms.functional as F
+
+from pycocotools import mask as cocomask
+
 import scripts.utils as SU
+import scripts.coco_utils as SCU
 from scripts.coco_eval import CocoEvaluator
+
+
+def convert_to_xyxy(bboxes):  # formats bboxes from (x,y,w,h) to (x,y,x,y)
+  for bbox in bboxes:
+    bbox[2] = bbox[0] + bbox[2]
+    bbox[3] = bbox[1] + bbox[3]
+  return bboxes
 
 
 def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
@@ -25,14 +36,38 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         lr_scheduler = SU.warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor)
 
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
-        images = list(image.to(device) for image in images)
-        targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
-        loss_dict = model(images, targets)
+        images = list(image.to(device) for image in images)
+        if model.__class__.__name__ == 'AutoShape':  # If model is from YOLOv5 package
+          images = [F.to_pil_image(image) for image in images]  # Convert images from tensor to PIL
+
+        # Format targets for torchvision models
+        formatted_targets = []
+        for i, img_targets in enumerate(targets):
+          # Stack boxes, masks (optionally) and labels of image targets into tensor
+          boxes = torch.stack([torch.squeeze(torch.Tensor(convert_to_xyxy([target['bbox']])),0) for target in img_targets]).long()
+          labels = torch.Tensor([target['category_id'] for target in img_targets]).long()
+          if model.__class__.__name__ == 'MaskRCNN':  # Get masks only for segmentation models
+            masks = []
+            # Convert every mask from polygon to binary mask
+            for target in img_targets:
+              for mask in target['segmentation']:
+                height = images[i].shape[1]
+                width = images[i].shape[2]
+                formatted_mask = torch.Tensor(cocomask.decode(cocomask.frPyObjects([mask], height, width)))
+                masks.append(formatted_mask)
+            masks = torch.stack(masks).long()
+            formatted_targets.append({'boxes': boxes, 'masks': masks, 'labels': labels})
+          else:
+            formatted_targets.append({'boxes': boxes, 'labels': labels})
+
+        formatted_targets = [{k: v.to(device) for k, v in t.items()} for t in formatted_targets]
+
+        loss_dict = model(images, formatted_targets)
 
         losses = sum(loss for loss in loss_dict.values())
 
-        # reduce losses over all GPUs for logging purposes
+        # Reduce losses over all GPUs for logging purposes
         loss_dict_reduced = SU.reduce_dict(loss_dict)
         losses_reduced = sum(loss for loss in loss_dict_reduced.values())
 
@@ -90,7 +125,7 @@ def evaluate(model, data_loader, device):
     for images, targets in metric_logger.log_every(data_loader, 100, header):
 
         images = list(img.to(device) for img in images)
-        if model.__class__.__name__ == 'AutoShape':  # If model is from YOLOv5 package
+        if model.__class__.__name__ == 'AutoShape':  # If model is from YOLO package
             images = [F.to_pil_image(image) for image in images]  # Convert images from tensor to PIL
 
         if torch.cuda.is_available():
@@ -117,34 +152,6 @@ def evaluate(model, data_loader, device):
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
 
-        # test lines #######################
-
-        # label_ids = dataset.coco.getCatIds()
-        # label_info = dataset.coco.loadCats(label_ids)
-        # label_names = [label['name'] for label in label_info]
-        # labels = dict(zip(label_ids,label_names))
-
-        # img = F.convert_image_dtype(images[1],torch.uint8).cpu()
-
-        # true_bboxes = F.Tensor([obj['bbox'] for obj in targets[1]]).cpu()
-        # true_labels = [labels[obj['category_id']] for obj in targets[1]]
-        # true_img = U.draw_bounding_boxes(img, true_bboxes, true_labels)
-        # plt.figure(figsize = (25,7))
-        # plt.imshow(F.to_pil_image(true_img))
-
-        # output = outputs[1]
-        # pred_bboxes = torch.stack([output['boxes'][i] for i in range(0,len(output['boxes'])) if output['scores'][i] > th])
-        # pred_labels_ids = output['labels'].tolist()
-        # pred_label_ids = [pred_labels_ids[i] for i in range(0,len(pred_labels_ids)) if output['scores'][i] > rh]
-        # pred_labels = [labels[label_id] for label_id in pred_label_ids]
-        # pred_img = U.draw_bounding_boxes(img, pred_bboxes, pred_labels)
-        # plt.figure(figsize = (25,7))
-        # plt.imshow(F.to_pil_image(pred_img))
-
-        # fig()
-
-        ###############
-
         res = {target[0]["image_id"]: output for target, output in zip(targets, outputs) if len(target) != 0}
         evaluator_time = time.time()
         coco_evaluator.update(res)
@@ -163,6 +170,8 @@ def evaluate(model, data_loader, device):
     batch_size = data_loader.batch_size
     fps = batch_size / metric_logger.meters['model_time'].global_avg
 
-    return coco_evaluator, fps, outputs
+    # Model maximum memory usage
+    MB = 1024.0 * 1024.0
+    max_mem = torch.cuda.max_memory_allocated() / MB  # in MegaBytes
 
-
+    return coco_evaluator, fps, max_mem, outputs
