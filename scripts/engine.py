@@ -15,7 +15,7 @@ import scripts.coco_utils as SCU
 from scripts.coco_eval import CocoEvaluator
 
 
-def convert_to_xyxy(bboxes):  # formats bboxes from (x,y,w,h) to (x,y,x,y)
+def convert_to_xyxy(bboxes):  # formats bboxes from (xmin,ymin,w,h) to (xmin,ymin,xmax,ymax)
   for bbox in bboxes:
     bbox[2] = bbox[0] + bbox[2]
     bbox[3] = bbox[1] + bbox[3]
