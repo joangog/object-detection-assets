@@ -1,0 +1,6 @@
+path: /content/dataset
+train: images/train_images
+val: images/val_images
+
+nc: 3  # Number of classes
+names: ['with_mask', 'without_mask', 'incorrect_mask']  # class names
