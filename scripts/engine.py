@@ -124,6 +124,11 @@ def evaluate(model, data_loader, device):
 
     for images, targets in metric_logger.log_every(data_loader, 100, header):
 
+        # If the batch size is 1 and the sole image has no annotations then skip it:
+        if len(targets) == 1:
+            if len(targets[0]) == 0:
+                continue
+
         images = list(img.to(device) for img in images)
         if model.__class__.__name__ == 'AutoShape':  # If model is from YOLO package
             images = [F.to_pil_image(image) for image in images]  # Convert images from tensor to PIL
@@ -131,8 +136,9 @@ def evaluate(model, data_loader, device):
         if torch.cuda.is_available():
             torch.cuda.synchronize()
 
+        # Get model predictions
         model_time = time.time()
-        outputs = model(images)  # Get model predictions
+        outputs = model(images)
         model_time = time.time() - model_time
 
         if model.__class__.__name__ == 'AutoShape':  # If model is from YOLO package
@@ -153,9 +159,12 @@ def evaluate(model, data_loader, device):
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
 
         res = {target[0]["image_id"]: output for target, output in zip(targets, outputs) if len(target) != 0}
+
+        # Get prediction evaluation
         evaluator_time = time.time()
         coco_evaluator.update(res)
         evaluator_time = time.time() - evaluator_time
+
         metric_logger.update(model_time=model_time, evaluator_time=evaluator_time)
 
     metric_logger.synchronize_between_processes()
