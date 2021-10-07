@@ -1,5 +1,5 @@
-train: /content/dataset/images/train_images
-val: /content/dataset/images/val_images
+train: ./dataset_PWMFD/images/train_images
+val: ./dataset_PWMFD/images/val_images
 
 nc: 3  # Number of classes
 names: ['with_mask', 'without_mask', 'incorrect_mask']  # class names

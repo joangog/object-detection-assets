@@ -1,5 +1,5 @@
-train: /content/dataset/images/train_images
-val: /content/dataset/images/val_images
+train: ./dataset_MASKD/images/train_images
+val: ./dataset_MASKD/images/val_images
 
 nc: 2  # Number of classes
 names: ['mask', 'no_mask']  # class names

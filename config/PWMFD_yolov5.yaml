@@ -1,4 +1,4 @@
-path: /content/dataset
+path: ./dataset_PWMFD
 train: images/train_images
 val: images/val_images
 
