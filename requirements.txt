@@ -16,3 +16,5 @@ ptflops
 
 Js2Py
 
+git+https://github.com/googlecolab/colabtools.git
+
