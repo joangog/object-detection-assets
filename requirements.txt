@@ -1,5 +1,6 @@
 # Python 3.7
 
+albumentations==1.0.3
 gdown==3.6.4
 google==2.0.3
 ipykernel==4.10.1
