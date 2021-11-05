@@ -104,7 +104,7 @@ def _get_iou_types(model):
 
 
 @torch.no_grad()
-def evaluate(model, data_loader, device, img_res=None):
+def evaluate(model, data_loader, device, img_size=None):
     n_threads = torch.get_num_threads()
     torch.set_num_threads(1)
     cpu_device = torch.device("cpu")
@@ -139,7 +139,7 @@ def evaluate(model, data_loader, device, img_res=None):
         # Get model predictions
         model_time = time.time()
         if model.__class__.__name__ == 'AutoShape':  # If model is from YOLO package
-            outputs = model(images, size=img_res)
+            outputs = model(images, size=img_size)
         else:
             outputs = model(images)
         model_time = time.time() - model_time
