@@ -38,7 +38,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
 
         images = list(image.to(device) for image in images)
-        if model.__class__.__name__ == 'AutoShape':  # If model is from YOLOv5 package
+        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO
           images = [F.to_pil_image(image) for image in images]  # Convert images from tensor to PIL
 
         # Format targets for torchvision models
@@ -130,7 +130,7 @@ def evaluate(model, data_loader, device, img_size=None):
                 continue
 
         images = list(img.to(device) for img in images)
-        if model.__class__.__name__ == 'AutoShape':  # If model is from YOLO package
+        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO
             images = [F.to_pil_image(image) for image in images]  # Convert images from tensor to PIL
 
         if torch.cuda.is_available():
@@ -138,13 +138,13 @@ def evaluate(model, data_loader, device, img_size=None):
 
         # Get model predictions
         model_time = time.time()
-        if model.__class__.__name__ == 'AutoShape':  # If model is from YOLO package
+        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO
             outputs = model(images, size=img_size)
         else:
             outputs = model(images)
         model_time = time.time() - model_time
 
-        if model.__class__.__name__ == 'AutoShape':  # If model is from YOLO package
+        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO
             # Format outputs to COCO format
             outputs_formatted = []
             for img_outputs in outputs.xyxy:
