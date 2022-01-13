@@ -7,12 +7,15 @@ import time
 import torch
 import torchvision.models.detection as M
 import torchvision.transforms.functional as F
+import torchvision.transforms as T
 
 from pycocotools import mask as cocomask
 
 import scripts.utils as SU
 import scripts.coco_utils as SCU
 from scripts.coco_eval import CocoEvaluator
+
+from yolov4.tool.utils import post_processing as yolov4_post_processing
 
 
 def convert_to_xyxy(bboxes):  # Formats bboxes from (xmin,ymin,w,h) to (xmin,ymin,xmax,ymax)
@@ -38,7 +41,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
 
         images = list(image.to(device) for image in images)
-        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO
+        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO v3 or v5
           images = [F.to_pil_image(image) for image in images]  # Convert images from tensor to PIL
 
         # Format targets for torchvision models
@@ -130,22 +133,32 @@ def evaluate(model, data_loader, device, img_size=None):
                 continue
 
         images = list(img.to(device) for img in images)
-        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO
+        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO v3 or v5
             images = [F.to_pil_image(image) for image in images]  # Convert images from tensor to PIL
+        if model.__class__.__name__ == 'Darknet':  # If model is YOLOv4
+            # YOLOv4 works only for batch_size = 1
+            image = images[0]
+            resize = T.Resize(model.height, model.width) # Resize image tensors
+            image = resize(image)
 
         if torch.cuda.is_available():
             torch.cuda.synchronize()
 
         # Get model predictions
         model_time = time.time()
-        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO
+        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO v3 or v5
             outputs = model(images, size=img_size)
+        elif model.__class__.__name__ == 'Darknet':  # If model is YOLOv4
+            outputs_raw = model(image)
         else:
             outputs = model(images)
         model_time = time.time() - model_time
+        # Preprocess outside of time calculation if model is YOLOv4
+        if model.__class__.__name__ == 'Darknet':  # If model is YOLOv4
+            outputs = yolov4_post_processing(image, 0.5, 0.6, outputs)
 
-        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO
-            # Format outputs to COCO format
+        # Format outputs to COCO format
+        if model.__class__.__name__ == 'AutoShape':  # If model is YOLO v3 or v5
             outputs_formatted = []
             for img_outputs in outputs.xyxy:
                 output_bboxes = img_outputs[:, :4]
@@ -158,6 +171,31 @@ def evaluate(model, data_loader, device, img_size=None):
                     'labels': output_labels
                 })
             outputs = outputs_formatted
+        elif model.__class__.__name__ == 'Darknet':  # If model is YOLOv4
+            outputs_formatted = []
+            for img_outputs in outputs:
+                output_bboxes = []
+                output_scores = []
+                output_labels = []
+                for bbox in img_outputs:
+                    img_height = image.shape[0]
+                    img_width = image.shape[1]
+                    bbox_x1 = int(bbox[0] * img_width)
+                    bbox_y1 = int(bbox[1] * img_height)
+                    bbox_x2 = int(bbox[2] * img_width)
+                    bbox_y2 = int(bbox[3] * img_height)
+                    output_bboxes.append(
+                        torch.as_tensor([bbox_x1, bbox_y1, bbox_x2, bbox_y2]))
+                    output_scores.append(box[4])
+                    output_labels.append(labels_inv[label_names[int(
+                        bbox[5])]])  # Convert YOLO label id to COCO label id
+                outputs_formatted.append({
+                    'boxes': output_bboxes,
+                    'scores': output_scores,
+                    'labels': output_labels
+                })
+            outputs = outputs_formatted
+
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
 
