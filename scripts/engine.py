@@ -186,7 +186,7 @@ def evaluate(model, data_loader, device, img_size=None):
                     bbox_y2 = int(bbox[3] * img_height)
                     output_bboxes.append(
                         torch.as_tensor([bbox_x1, bbox_y1, bbox_x2, bbox_y2]))
-                    output_scores.append(box[4])
+                    output_scores.append(bbox[4])
                     output_labels.append(labels_inv[label_names[int(
                         bbox[5])]])  # Convert YOLO label id to COCO label id
                 outputs_formatted.append({
