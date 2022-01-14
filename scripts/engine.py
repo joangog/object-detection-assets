@@ -15,8 +15,6 @@ import scripts.utils as SU
 import scripts.coco_utils as SCU
 from scripts.coco_eval import CocoEvaluator
 
-from yolov4.tool.utils import post_processing as yolov4_post_processing
-
 
 def convert_to_xyxy(bboxes):  # Formats bboxes from (xmin,ymin,w,h) to (xmin,ymin,xmax,ymax)
   for bbox in bboxes:
@@ -138,7 +136,7 @@ def evaluate(model, data_loader, device, img_size=None):
         if model.__class__.__name__ == 'Darknet':  # If model is YOLOv4
             # YOLOv4 works only for batch_size = 1
             image = images[0]
-            resize = T.Resize(model.height, model.width) # Resize image tensors
+            resize = T.Resize((model.height, model.width), antialias=True) # Resize image tensors
             image = resize(image)
 
         if torch.cuda.is_available():
@@ -155,6 +153,7 @@ def evaluate(model, data_loader, device, img_size=None):
         model_time = time.time() - model_time
         # Preprocess outside of time calculation if model is YOLOv4
         if model.__class__.__name__ == 'Darknet':  # If model is YOLOv4
+            from yolov4.tool.utils import post_processing as yolov4_post_processing
             outputs = yolov4_post_processing(image, 0.5, 0.6, outputs)
 
         # Format outputs to COCO format
