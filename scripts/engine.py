@@ -4,6 +4,8 @@ import sys
 import math
 import time
 
+import cv2
+
 import torch
 import torchvision.models.detection as M
 import torchvision.transforms.functional as F
@@ -134,10 +136,15 @@ def evaluate(model, data_loader, device, img_size=None):
         if model.__class__.__name__ == 'AutoShape':  # If model is YOLO v3 or v5
             images = [F.to_pil_image(image) for image in images]  # Convert images from tensor to PIL
         if model.__class__.__name__ == 'Darknet':  # If model is YOLOv4
-            # YOLOv4 works only for batch_size = 1
+            # YOLOv4 works only for batch_size = 1 right now
             image = images[0]
-            resize = T.Resize((model.height, model.width), antialias=True) # Resize image tensors
-            image = resize(image)
+            img_height = image.shape[1]
+            img_width = image.shape[2]
+            # convert tensor to cv2 image to use resize function like in original YOLOv4 repo
+            image_cv2 = cv2.resize(image.permute(1, 2, 0).cpu().numpy(), (model.height, model.width))
+            # convert cv2 image back to tensor
+            to_tensor = T.ToTensor()
+            image = to_tensor(image_cv2).to(device)
 
         if torch.cuda.is_available():
             torch.cuda.synchronize()
@@ -147,14 +154,14 @@ def evaluate(model, data_loader, device, img_size=None):
         if model.__class__.__name__ == 'AutoShape':  # If model is YOLO v3 or v5
             outputs = model(images, size=img_size)
         elif model.__class__.__name__ == 'Darknet':  # If model is YOLOv4
-            outputs_raw = model(image)
+            outputs_raw = model(image.unsqueeze(0))
         else:
             outputs = model(images)
         model_time = time.time() - model_time
         # Preprocess outside of time calculation if model is YOLOv4
         if model.__class__.__name__ == 'Darknet':  # If model is YOLOv4
             from yolov4.tool.utils import post_processing as yolov4_post_processing
-            outputs = yolov4_post_processing(image, 0.5, 0.6, outputs)
+            outputs = yolov4_post_processing(image, 0.5, 0.6, outputs_raw)
 
         # Format outputs to COCO format
         if model.__class__.__name__ == 'AutoShape':  # If model is YOLO v3 or v5
@@ -177,8 +184,7 @@ def evaluate(model, data_loader, device, img_size=None):
                 output_scores = []
                 output_labels = []
                 for bbox in img_outputs:
-                    img_height = image.shape[0]
-                    img_width = image.shape[1]
+                    # Convert percentages to dimensions
                     bbox_x1 = int(bbox[0] * img_width)
                     bbox_y1 = int(bbox[1] * img_height)
                     bbox_x2 = int(bbox[2] * img_width)
@@ -187,14 +193,20 @@ def evaluate(model, data_loader, device, img_size=None):
                         torch.as_tensor([bbox_x1, bbox_y1, bbox_x2, bbox_y2]))
                     output_scores.append(bbox[4])
                     output_labels.append(labels_inv[label_names[int(
-                        bbox[5])]])  # Convert YOLO label id to COCO label id
-                outputs_formatted.append({
-                    'boxes': output_bboxes,
-                    'scores': output_scores,
-                    'labels': output_labels
-                })
+                        bbox[6])]])  # Convert YOLO label id to COCO label id
+                if len(output_bboxes) != 0:
+                    # Convert to tensors
+                    output_bboxes = torch.stack(output_bboxes)
+                    output_scores = torch.tensor(output_scores)
+                    output_labels = torch.tensor(output_labels)
+                    outputs_formatted.append({
+                        'boxes': output_bboxes,
+                        'scores': output_scores,
+                        'labels': output_labels
+                    })
+                else:
+                    outputs_formatted.append({})
             outputs = outputs_formatted
-
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
 
