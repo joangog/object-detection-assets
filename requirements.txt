@@ -1,6 +1,6 @@
 # Python 3.7
 
-gdown==3.6.4
+gdown
 google==2.0.3
 ipykernel==4.10.1
 ipython==5.5.0
