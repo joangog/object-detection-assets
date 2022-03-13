@@ -1,0 +1,13 @@
+,model,model_img_size,model_params,model_gflops,fps,max_mem,iou_type,metric,iou,area,max_dets,score
+0,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_precision,0.50:0.95,all,100,0.3739564584439724
+1,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_precision,0.50,all,100,0.6229863880493233
+2,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_precision,0.75,all,100,0.4328607810219401
+3,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_precision,0.50:0.95,small,100,0.031138613861386142
+4,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_precision,0.50:0.95,medium,100,0.3447808133746623
+5,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_precision,0.50:0.95,large,100,0.374371330213175
+6,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_recall,0.50:0.95,all,1,0.43853828888184426
+7,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_recall,0.50:0.95,all,10,0.44022103311465133
+8,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_recall,0.50:0.95,all,100,0.44022103311465133
+9,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_recall,0.50:0.95,small,100,0.1833333333333333
+10,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_recall,0.50:0.95,medium,100,0.4044566544566544
+11,yolov5s_se_mosaic_mixup_fl_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained_optimized,320,7.2,4.1,69.50590228972855,809.0791015625,bbox,avg_recall,0.50:0.95,large,100,0.44148834950819243

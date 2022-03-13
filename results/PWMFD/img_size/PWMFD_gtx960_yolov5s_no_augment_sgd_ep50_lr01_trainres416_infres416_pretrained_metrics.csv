@@ -1,0 +1,13 @@
+,model,model_img_size,model_params,model_gflops,fps,max_mem,iou_type,metric,iou,area,max_dets,score
+0,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_precision,0.50:0.95,all,100,0.35851359712090486
+1,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_precision,0.50,all,100,0.607081875060395
+2,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_precision,0.75,all,100,0.3967175620905317
+3,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_precision,0.50:0.95,small,100,0.10940594059405938
+4,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_precision,0.50:0.95,medium,100,0.34786374652802265
+5,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_precision,0.50:0.95,large,100,0.3600935159682684
+6,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_recall,0.50:0.95,all,1,0.42570356592226494
+7,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_recall,0.50:0.95,all,10,0.4262070905949739
+8,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_recall,0.50:0.95,all,100,0.4262070905949739
+9,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_recall,0.50:0.95,small,100,0.10833333333333332
+10,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_recall,0.50:0.95,medium,100,0.40868131868131863
+11,yolov5s_no_augment_sgd_ep50_lr01_trainres416_infres416_pretrained,416,7.0,6.7,66.21677472920882,802.2841796875,bbox,avg_recall,0.50:0.95,large,100,0.4281549051288614

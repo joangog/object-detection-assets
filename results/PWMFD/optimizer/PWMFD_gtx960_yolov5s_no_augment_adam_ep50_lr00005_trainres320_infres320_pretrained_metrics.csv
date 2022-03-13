@@ -1,0 +1,13 @@
+,model,model_img_size,model_params,model_gflops,fps,max_mem,iou_type,metric,iou,area,max_dets,score
+0,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_precision,0.50:0.95,all,100,0.3530026774948767
+1,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_precision,0.50,all,100,0.5829338260946914
+2,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_precision,0.75,all,100,0.40372366220371725
+3,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_precision,0.50:0.95,small,100,0.05049504950495049
+4,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_precision,0.50:0.95,medium,100,0.324108157461849
+5,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_precision,0.50:0.95,large,100,0.3548020989370775
+6,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_recall,0.50:0.95,all,1,0.42222718744655485
+7,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_recall,0.50:0.95,all,10,0.423133531857431
+8,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_recall,0.50:0.95,all,100,0.423133531857431
+9,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_recall,0.50:0.95,small,100,0.05
+10,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_recall,0.50:0.95,medium,100,0.39763125763125756
+11,yolov5s_no_augment_adam_ep50_lr00005_trainres320_infres320_pretrained,320,7.0,4.0,69.26046359124426,802.26220703125,bbox,avg_recall,0.50:0.95,large,100,0.42502239848250595

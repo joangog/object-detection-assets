@@ -1,0 +1,13 @@
+,model,model_img_size,model_params,model_gflops,fps,max_mem,iou_type,metric,iou,area,max_dets,score
+0,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_precision,0.50:0.95,all,100,0.382767944101457
+1,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_precision,0.50,all,100,0.6333962595191394
+2,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_precision,0.75,all,100,0.42709855084739623
+3,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_precision,0.50:0.95,small,100,0.06093609360936093
+4,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_precision,0.50:0.95,medium,100,0.37567482933132457
+5,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_precision,0.50:0.95,large,100,0.384223942050171
+6,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_recall,0.50:0.95,all,1,0.4395967728588106
+7,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_recall,0.50:0.95,all,10,0.4400331609084917
+8,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_recall,0.50:0.95,all,100,0.4400331609084917
+9,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_recall,0.50:0.95,small,100,0.11666666666666665
+10,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_recall,0.50:0.95,medium,100,0.41775335775335776
+11,yolov5s_no_augment_frozen10_sgd_ep50_lr01_trainres320_infres320_pretrained,320,7.0,4.0,69.48947316356302,802.26220703125,bbox,avg_recall,0.50:0.95,large,100,0.4423675814333111
